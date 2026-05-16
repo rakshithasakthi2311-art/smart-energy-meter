@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TNEB Smart Energy Monitor — Login</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --neon: #00e5ff;
+    --neon2: #ff6b35;
+    --dark: #050c1a;
+    --panel: #0a1628;
+    --border: rgba(0,229,255,0.2);
+  }
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    font-family: 'Exo 2', sans-serif;
+    background: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Animated grid background */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes gridMove { 0%{background-position:0 0} 100%{background-position:40px 40px} }
+
+  /* Scanning line */
+  body::after {
+    content:'';
+    position:fixed; left:0; right:0; height:3px;
+    background: linear-gradient(90deg, transparent, var(--neon), transparent);
+    animation: scan 4s ease-in-out infinite;
+    pointer-events:none;
+    opacity:0.4;
+  }
+  @keyframes scan {
+    0%{top:-3px} 100%{top:100vh}
+  }
+
+  .login-card {
+    position:relative;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 48px 40px;
+    width: 420px;
+    box-shadow:
+      0 0 40px rgba(0,229,255,0.08),
+      0 0 80px rgba(0,229,255,0.04),
+      inset 0 1px 0 rgba(0,229,255,0.1);
+    animation: fadeUp 0.6s ease-out;
+  }
+  @keyframes fadeUp {
+    from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)}
+  }
+
+  .login-card::before {
+    content:'';
+    position:absolute; top:0; left:20px; right:20px; height:2px;
+    background: linear-gradient(90deg, transparent, var(--neon), transparent);
+  }
+
+  .brand-logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight:700;
+    letter-spacing: 4px;
+    color: var(--neon);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+  .brand-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px;
+    font-weight:700;
+    color: #e0f7ff;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .brand-sub {
+    font-size: 12px;
+    color: rgba(224,247,255,0.4);
+    letter-spacing: 1px;
+    margin-bottom: 36px;
+  }
+
+  .field-label {
+    display:block;
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing: 2px;
+    color: var(--neon);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .field-input {
+    width:100%;
+    background: rgba(0,229,255,0.04);
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 3px;
+    padding: 12px 16px;
+    color: #e0f7ff;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+  }
+  .field-input:focus {
+    border-color: var(--neon);
+    background: rgba(0,229,255,0.07);
+    box-shadow: 0 0 20px rgba(0,229,255,0.1);
+  }
+  .field-input::placeholder { color: rgba(224,247,255,0.25); }
+
+  .btn-login {
+    width:100%;
+    background: linear-gradient(135deg, var(--neon) 0%, #0099bb 100%);
+    border: none;
+    border-radius: 3px;
+    padding: 14px;
+    color: var(--dark);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight:700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-login:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0,229,255,0.35);
+  }
+  .btn-login:active { transform: translateY(0); }
+  .btn-login::after {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  }
+
+  .hint {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: rgba(0,229,255,0.05);
+    border: 1px solid rgba(0,229,255,0.1);
+    border-radius: 3px;
+    font-size: 11px;
+    color: rgba(224,247,255,0.4);
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .hint span { color: var(--neon); opacity:0.7; }
+
+  .error-msg {
+    display:none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(255,60,60,0.1);
+    border: 1px solid rgba(255,60,60,0.3);
+    border-radius: 3px;
+    color: #ff6b6b;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  /* Power indicators */
+  .power-dots {
+    display:flex; gap:6px; margin-bottom:28px;
+  }
+  .dot {
+    width:6px; height:6px; border-radius:50%;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+  .dot:nth-child(1){ background:var(--neon); animation-delay:0s; }
+  .dot:nth-child(2){ background:var(--neon); animation-delay:0.3s; }
+  .dot:nth-child(3){ background:var(--neon); animation-delay:0.6s; }
+  @keyframes blink {
+    0%,100%{opacity:0.3} 50%{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="login-card">
+  <div class="brand-logo">TNEB · Smart Grid</div>
+  <div class="brand-title">Energy Monitor<br>& Theft Detection</div>
+  <div class="brand-sub">SECURE OPERATIONS PORTAL v2.4</div>
+  <div class="power-dots">
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+
+  <label class="field-label" for="username">User ID</label>
+  <input class="field-input" type="text" id="username" placeholder="Enter username" autocomplete="off"/>
+
+  <label class="field-label" for="password">Access Code</label>
+  <input class="field-input" type="password" id="password" placeholder="Enter password"/>
+
+  <button class="btn-login" onclick="doLogin()">⚡ Authenticate</button>
+
+  <div class="error-msg" id="err">❌ Invalid credentials. Please try again.</div>
+
+  <div class="hint">
+    Demo: <span>admin / admin123</span> &nbsp;·&nbsp; <span>tneb / tneb2024</span>
+  </div>
+</div>
+
+<script>
+  // Enter key support
+  document.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+  async function doLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const err = document.getElementById('err');
+    err.style.display = 'none';
+
+    if (!username || !password) {
+      err.textContent = '⚠️ Please enter both username and password.';
+      err.style.display = 'block'; return;
+    }
+
+    try {
+      const res = await fetch('/api/login', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({username, password})
+      });
+      const data = await res.json();
+      if(data.success) {
+        sessionStorage.setItem('user', data.username);
+        sessionStorage.setItem('token', data.token);
+        window.location.href = '/dashboard';
+      } else {
+        err.textContent = '❌ Invalid credentials.';
+        err.style.display = 'block';
+      }
+    } catch(e) {
+      err.textContent = '⚠️ Cannot reach server. Is backend running?';
+      err.style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
